@@ -1,31 +1,9 @@
-
 const collegeModel = require("../models/collegeModel");
 const internModel = require('../models/internModel');
+const { isValid,isValidatorName, isValidRequest, isValidUrl } = require('../middleware/validator')
 
 
-const isValid = function (value) {
-    if (typeof value === "undefined" || value === null) return false;
-    if (typeof value === "string" && value.trim().length > 0) return true;
-    return false;
-};
-
-const isValidRequest = function (object) {
-    return Object.keys(object).length > 0
-}
-
-// const isValidEmail = function (value) {
-//     const regexForEmail = /^[a-z0-9_]{3,}@[a-z]{3,}.[a-z]{3,6}$/
-//     return regexForEmail.test(value)
-// }
-
-// const isValidPassword = function (value) {
-//     const regexForPassword = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&])[a-zA-Z0-9@#$%&]{6,20}$/
-//     return regexForPassword.test(value)
-// }
-const regixValidator = function (value) {
-    const regex = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/
-    return regex.test(value)
-}
+//<-----------------------------create College --------------------->//
 
 const createCollege = async function (req, res) {
 
@@ -38,20 +16,26 @@ const createCollege = async function (req, res) {
                 .send({ status: false, message: "author data is required" });
         }
         //using desturcturing
-        const { name, fullName, logoLink} = data;
+        const { name, fullName, logoLink } = data;
 
         //data should not have more than 5keys as per outhorSchema (edge case)
         if (Object.keys(data).length > 4) {
             return res.
-                  status(400).
-                  send({ status: false, message: "Invalid data entry inside request body" })
+                status(400).
+                send({ status: false, message: "Invalid data entry inside request body" })
         }
-       
-        if (!isValid( name.trim()) || !regixValidator( name.trim())) {
+
+        if (!name)
+            return res
+                .status(400)
+                .send({ status: false, msg: "Name is madatory" });
+
+        if (!isValid(name.trim()) || !isValidatorName(name.trim())) {
             return res
                 .status(400)
                 .send({ status: false, message: " name is required or its should contain character" })
         }
+
         const isNameUnique = await collegeModel.findOne({ name: name })
         if (isNameUnique) {
             return res
@@ -59,42 +43,67 @@ const createCollege = async function (req, res) {
                 .send({ status: false, message: "Name already exits" });
         }
 
-        if (!isValid( fullName.trim()) ||  !regixValidator( fullName.trim()) ) {
+        if (!fullName)
+            return res
+                .status(400)
+                .send({ status: false, msg: "fullName is madatory" });
+
+        if (!isValid(fullName.trim()) || !isValidatorName(fullName.trim())) {
             return res
                 .status(400)
                 .send({ status: false, message: "fullname is invalid" })
         }
 
-        if(!logoLink){
+        if (!logoLink) {
 
-            return res.status(400).send({status:false, message:"Please give logo link"})
+            return res
+            .status(400)
+            .send({ status: false, message: "Please give logo link" })
         }
-    
+
+        if (!isValidUrl(logoLink)) {
+            return res
+                .status(400)
+                .send({ status: false, msg: "Put the correct logoLink " });
+        }
+        
         const newCollege = await collegeModel.create(data);
         return res
             .status(201)
-            .send({ status: true, message: newCollege.name +" college created successfully", data: newCollege });
+            .send({ status: true, message: newCollege.name + " college created successfully", data: newCollege });
 
     } catch (err) {
-        res.status(500).send({ err: err.message })
+        res.status(500).send({status: false, msg: `this is catch err ${err.message}` })
 
     }
 }
 
+//<-----------------------------college Details---------------------------->//
 
 const collegeDetails = async (req, res) => {
     try {
-        let data = req.query.name;
-        if (Object.keys(data) < 1) return res.status(400).send({ status: false, msg: "Please enter the college name" });
+        let data = req.query;
+        let name = req.query.name;
+        if (Object.keys(data) == 0) 
+        return res
+        .status(400)
+        .send({ status: false, msg: "Please enter the college name in query param" });
 
-        let getClg = await collegeModel.findOne({ name: data, isDeleted: false })
-        // console.log(getClg)
-        if (!getClg) return res.status(400).send({ status: false, msg: "No such college found" });
+        let getClg = await collegeModel.findOne({ name: name, isDeleted: false })
+        
+        if (!getClg) 
+        return res
+        .status(400)
+        .send({ status: false, msg: "No such college found" });
 
         let clgId = getClg.id;
-        let getInternData = await internModel.find({ collegeId: clgId, isDeleted: false, }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
-        // console.log(getInternData)
-        if (!getInternData) return res.status(400).send({ status: false, msg: "No intern Apply for This College" })
+        
+        let getInternData = await internModel.find({ collegeId: clgId, isDeleted: false, }).select({ name: 1, email: 1, mobile: 1 })
+        
+        if (!getInternData) 
+        return res
+        .status(400)
+        .send({ status: false, msg: "No intern Apply for This College" })
 
         let details = {
             name: getClg.name,
@@ -104,9 +113,8 @@ const collegeDetails = async (req, res) => {
         }
         res.status(200).send({ status: true, data: details });
     } catch (err) {
-        res.status(400).send({ status: false, msg: err })
+        res.status(500).send({status: false, msg: `this is catch err ${err.message}` })
     }
 }
-
 module.exports.createCollege = createCollege;
 module.exports.collegeDetails = collegeDetails

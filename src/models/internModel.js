@@ -5,11 +5,13 @@ const internSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    trim:true
   },
   email: {
     type: String,
     unique: true,
     required: true,
+    trim:true
   },
   mobile: {
     type: Number,
@@ -26,4 +28,4 @@ const internSchema = new mongoose.Schema({
   },
 },{timestamp : true});
 
-module.exports = mongoose.modelNames('internList',internSchema)
+module.exports = mongoose.model('internList',internSchema)
