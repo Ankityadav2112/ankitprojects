@@ -13,13 +13,13 @@ const createIntern = async (req, res) => {
         if (Object.keys(data).length == 0) {
             return res
                 .status(400)
-                .send({ status: false, msg: "Data is required for creating Intern Details" })
+                .send({ status: false, message: "Data is required for creating Intern Details" })
         };
 
         if (!name) {
             return res
                 .status(400)
-                .send({ status: false, msg: "name is mandatory" })
+                .send({ status: false, message: "name is mandatory" })
         };
 
         if (!isValid(name.trim()) || !isValidName(name.trim())) {
@@ -31,25 +31,25 @@ const createIntern = async (req, res) => {
         if (!email) {
             return res
                 .status(400)
-                .send({ status: false, msg: "emailId is mandatory" })
+                .send({ status: false, message: "emailId is mandatory" })
         };
 
         if (!isValidEmail(email)) {
             return res
                 .status(400)
-                .send({ status: false, msg: "please enter valid emailId" })
+                .send({ status: false, message: "please enter valid emailId" })
         };
 
         if (!mobile) {
             return res
                 .status(400)
-                .send({ status: false, msg: "mobile number is mandatory" })
+                .send({ status: false, message: "mobile number is mandatory" })
         };
 
         if (!isValidMobile(mobile)) {
             return res
                 .status(400)
-                .send({ status: false, msg: "please enter valid mobile number" })
+                .send({ status: false, message: "please enter valid mobile number" })
         };
 
 
@@ -90,7 +90,7 @@ const createIntern = async (req, res) => {
         res.status(201).send({ status: true, data: interndata })
 
     } catch (err) {
-        res.status(500).send({ status: false, msg: `this is catch err ${err.message}` })
+        res.status(500).send({ status: false, message: `this is catch err ${err.message}` })
     }
 }
 

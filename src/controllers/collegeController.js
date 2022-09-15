@@ -99,7 +99,7 @@ const collegeDetails = async (req, res) => {
         if (!getClg) {
             return res
                 .status(400)
-                .send({ status: false, msg: "No such college found" })
+                .send({ status: false, message: "No such college found" })
         };
 
         let clgId = getClg.id;
@@ -109,7 +109,7 @@ const collegeDetails = async (req, res) => {
         if (getInternData==0) {
             return res
                 .status(400)
-                .send({ status: false, msg: "No intern applied for this College" })
+                .send({ status: false, message: "No intern applied for this College" })
         };
 
         let details = {
@@ -125,7 +125,7 @@ const collegeDetails = async (req, res) => {
     } catch (err) {
            res
             .status(500)
-            .send({ status: false, msg: `this is catch err ${err.message}` })
+            .send({ status: false, message: `this is catch err ${err.message}` })
     }
 }
 
