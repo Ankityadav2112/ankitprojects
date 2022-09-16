@@ -9,6 +9,7 @@ const createIntern = async (req, res) => {
     try {
         let data = req.body;
         let { name, mobile, email, collegeName } = data;
+        data["email"] = data["email"].toLowerCase()
 
         if (Object.keys(data).length == 0) {
             return res
@@ -46,7 +47,7 @@ const createIntern = async (req, res) => {
                 .send({ status: false, message: "mobile number is mandatory" })
         };
 
-        if (!isValidMobile(mobile)) {
+        if (isValidMobile(mobile)==false) {
             return res
                 .status(400)
                 .send({ status: false, message: "please enter valid mobile number" })

@@ -28,4 +28,5 @@ const internSchema = new mongoose.Schema({
   },
 },{timestamp : true});
 
+
 module.exports = mongoose.model('internList',internSchema)

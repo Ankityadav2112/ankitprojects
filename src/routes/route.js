@@ -10,6 +10,7 @@ router.post('/functionup/interns', internController.createIntern);
 
 router.get('/functionup/collegeDetails', collegeController.collegeDetails);
 
+
 router.all("/*", function (req, res) {
     res.status(400).send({
         status: false,

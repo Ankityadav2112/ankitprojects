@@ -9,17 +9,24 @@ const createCollege = async function (req, res) {
 
     try {
         let data = req.body
-
+        //using desturcturing
+        const { name, fullName, logoLink } = data;
+        
         data["name"] = data["name"].toLowerCase()
+        
+        if (Object.keys(data).length == 0) {
+            return res
+                .status(400)
+                .send({ status: false, message: "Data is required for creating college details" })
+        };
+
 
         if (!isValidRequest(data)) {
             return res
                 .status(400)
                 .send({ status: false, message: "author data is required" });
         }
-        //using desturcturing
-        const { name, fullName, logoLink } = data;
-
+        
         if (!name) {
             return res
                 .status(400)
@@ -87,11 +94,12 @@ const createCollege = async function (req, res) {
 const collegeDetails = async (req, res) => {
     try {
         let data = req.query;
-
-        if (Object.keys(data) == 0) {
+        let collegeName = req.query.collegeName
+        
+        if (!collegeName) {
             return res
                 .status(400)
-                .send({ status: false, message: "Please enter the collegeName" })
+                .send({ status: false, message: "collegeName is required for getting interns data" })
         };
 
         let getClg = await collegeModel.findOne({ name: data.collegeName.toLowerCase(), isDeleted: false });
