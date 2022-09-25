@@ -12,7 +12,7 @@ const bookSchema = mongoose.Schema({
 
         category: { type:String , required:true },
 
-        subcategory:{ type: [String] , required:true },
+        subcategory:{ type: String , required:true },
 
         reviews: { type:Number, default: 0 },
 
@@ -20,7 +20,7 @@ const bookSchema = mongoose.Schema({
 
         isDeleted: { type:Boolean, default: false },
 
-        releasedAt: { type:Date, required:true },     //  format("YYYY-MM-DD")
+        releasedAt: { type:Date, required:true }     //  format("YYYY-MM-DD")
         
 },{timestamps:true})
 

@@ -60,7 +60,7 @@ const loginUser = async function(req,res){
 
         if (!User) return res.status(400).send({status:false, message: "Invalid username or password" })
         
-        let payload = { UserId: User._id.toString() }
+        let payload = { userId: User._id.toString() }
 
         let token = jwt.sign(payload, "projectgroup25-importent-key",{ expiresIn:"24h"});
 

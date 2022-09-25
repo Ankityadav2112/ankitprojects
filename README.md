@@ -68,6 +68,9 @@
 - On a successful login attempt return a JWT token contatining the userId, exp, iat. The response should be a JSON object like [this](#successful-response-structure)
 - If the credentials are incorrect return a suitable error message with a valid HTTP status code. The response should be a JSON object like [this](#error-response-structure)
 
+
+..................Book APIs..................
+
 ## Books API
 ### POST /books
 - Create a book document from request body. Get userId in request body only.
@@ -75,6 +78,7 @@
 - Return HTTP status 201 on a succesful book creation. Also return the book document. The response should be a JSON object like [this](#successful-response-structure) 
 - Create atleast 10 books for each user
 - Return HTTP status 400 for an invalid request with a response body like [this](#error-response-structure)
+
 
 ### GET /books
 - Returns all books in the collection that aren't deleted. Return only book _id, title, excerpt, userId, category, releasedAt, reviews field. Response example [here](#get-books-response)
@@ -107,6 +111,9 @@
 ### DELETE /books/:bookId
 - Check if the bookId exists and is not deleted. If it does, mark it deleted and return an HTTP status 200 with a response body with status and message.
 - If the book document doesn't exist then return an HTTP status of 404 with a body like [this](#error-response-structure) 
+
+
+----------------------------------Review APIs-----------------------------------
 
 ## Review APIs
 ### POST /books/:bookId/review
@@ -316,4 +323,7 @@ Refer below sample
     "reviewsData": []
   }
 }
-```
+
+
+---------------------------Doubt or Error------------------
+1) 1 API Book )POST) date format.....also dounbt on ISBN no. regex not added at , review also checking also no. type but we need to check that specific range......
