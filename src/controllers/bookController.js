@@ -24,9 +24,6 @@ const createBook = async function (req, res) {
       return res.status(403).send({ status: false, message: " Authorisation failed" })
     //--------------------------------------------------------------------------------------------------
 
-    // let finduser = await userModel.findById(userId)
-    // if (!finduser) return res.status(404).send({ status: false, message: "User is not exist" })
-
     if (!valid.isValid(title)) return res.status(400).send({ status: false, message: "Title is Mandatory" })
 
     let uniquetitle = await bookModel.findOne({ title: title })
@@ -47,11 +44,8 @@ const createBook = async function (req, res) {
 
     if (!valid.isValid(subcategory)) return res.status(400).send({ status: false, message: "Subcategory is Mandatory" })
 
-    if (!valid.TIME(releasedAt)) return res.status(400).send({ status: false, message: "releasedAt time must be present in Format YYYY-MM-DD" })
-    // if (!moment(releasedAt, 'YYYY-MM-DD', true).isValid()) return res.status(400).send({ status: false, message: "releasedAt Date must be present in Format YYYY-MM-DD" })
-
-
-    if (reviews) {  //reviews should be 0 ...???
+    if (!moment(releasedAt, 'YYYY-MM-DD', true).isValid()) return res.status(400).send({ status: false, message: "releasedAt Date must be present in Format YYYY-MM-DD" })
+    if (reviews) {  
       if (!valid.isvalidNumber(reviews)) return res.status(400).send({ status: false, message: "Input type only in number" })
     }
     const saveData = await bookModel.create(data)
@@ -72,26 +66,12 @@ const getAllBook = async function (req, res) {
 
     if (userId) {
       if (!valid.isValidObjectId(userId)) return res.status(400).send({ status: false, message: " please enter valid userId " });
+      
+      let checkUser = await userModel.findById(userId)
+      if(!checkUser) return res.status(400).send({ status: false, message: " User Does not Exist" });
+
       data.userId = userId
-      // let book = await bookModel.find({ userId: userId, isDeleted: false }).select({ _id: 1 , title: 1, excerpt: 1, userId: 1, category: 1 , reviews:1 , releasedAt: 1})
-      // return res.status(200).send({ status: true, message: 'Book list', data: book });
     }
-    // if (category) {
-
-    //   let book = await bookModel.find({ category: data.category, isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, subcategory: 1, releasedAt: 1, reviews: 1, _id: 1 })
-    //   if (book.length == 0) {
-    //     return res.status(404).send({ status: false, message: "No Book found for such category" })
-    //   }
-    //   return res.status(200).send({ status: true, message: 'Book list', data: book });
-
-    // }
-    // if (subcategory) {
-    //   let book = await bookModel.find({ subcategory: subcategory, isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, subcategory: 1, releasedAt: 1, reviews: 1, _id: 1 })
-    //   if (book.length == 0) {
-    //     return res.status(404).send({ status: false, message: "No Book found for such subcategory" })
-    //   }
-    //   return res.status(200).send({ status: true, message: 'Book list', data: book });
-    // }
     if (valid.isValid(category)) data.category = category
 
     if (valid.isValid(subcategory)) data.subcategory = subcategory

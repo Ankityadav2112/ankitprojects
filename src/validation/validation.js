@@ -13,7 +13,7 @@ const isValidRequestBody = function (reqBody) {
 }
 
 const emailValidation = function (email) {
-    let regexForEmail = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
+    let regexForEmail =/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/ //  /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{1,3})+$/
     return regexForEmail.test(email)
 }
 
@@ -23,7 +23,7 @@ const mobileValidation = function (phone) {
 }
 
 const isValidPassword = function (password) {
-    let regexforpassword = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,15}$/
+    let regexforpassword = /^(?=.*\d)(?=.*[a-z]).{8,15}$/
     return regexforpassword.test(password)
 }
 const isValidEnum = function (value) {

@@ -28,14 +28,19 @@ const registerUser = async function(req,res){
 
         if (!valid.isValid(password)) return res.status(400).send({ status: false, message: "Password is Mandatory" })
         
-        if (!valid.isValidPassword(password)) return res.status(400).send({ status: false, message: "password is invalid, it contain at least one Upper one lower letters one Special char and one number with min 8 and max 15 letters" })
+        if (!valid.isValidPassword(password)) return res.status(400).send({ status: false, message: "password is invalid, it contain min 8 and max 15 letters" })
 
         const isPhoneExist = await UserModel.findOne({ phone: phone })
 
         if (isPhoneExist) return res.status(400).send({ status: false, message: "phone number already exist" })
 
         const isEmailExist = await UserModel.findOne({ email: email })
+        if(address){
 
+            if(typeof(address) !== 'object') return res.status(400).send({ status: false, message: "address type must be Object" })
+
+            if(address.length!==undefined) return res.status(400).send({ status: false, message: "address type must be Object 2" })
+        }
         if (isEmailExist) return res.status(400).send({ status: false, message: "email is already registerd" })
 
         const savedata = await UserModel.create(data)
@@ -66,7 +71,7 @@ const loginUser = async function(req,res){
 
         res.setHeader("x-api-key", token);
 
-        return res.status(201).send({ status:true , message: "login successfully", data: token });
+        return res.status(201).send({ status:true , message: "login successfully", data:{token : token }});
     }
     catch (err) {
         return res.status(500).send({ status:false,message: "Error", error: err.message })
