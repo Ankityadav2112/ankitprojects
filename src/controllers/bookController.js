@@ -2,6 +2,7 @@ const bookModel = require('../models/bookModel')
 const userModel = require('../models/userModel')
 const reviewModel = require('../models/reviewModel')
 const valid = require('../validation/validation')
+const aws = require('../aws/aws')
 const moment = require('moment')
 
 const createBook = async function (req, res) {
@@ -48,6 +49,14 @@ const createBook = async function (req, res) {
     if (reviews) {  
       if (!valid.isvalidNumber(reviews)) return res.status(400).send({ status: false, message: "Input type only in number" })
     }
+    
+    let files = req.files
+    if(files && files.length > 0){
+
+      let uploadedFileURL = await aws.uploadFile(files[0])
+      data.bookCover = uploadedFileURL
+    }
+    
     const saveData = await bookModel.create(data)
 
     return res.status(201).send({ status: true, message: "Book created succesfully", data: saveData })

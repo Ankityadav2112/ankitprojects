@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bookSchema = mongoose.Schema({ 
 
         title: { type : String , required:true , unique:true },
+        
+        bookCover : { type : String },
 
         excerpt: { type:String , required:true }, 
 
