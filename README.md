@@ -1,1 +1,1 @@
-# ankitprojects
+# mini-blog-project
